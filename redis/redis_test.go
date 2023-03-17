@@ -53,11 +53,6 @@ func TestScan(t *testing.T) {
 		Password: "123456", // no password set
 		DB:       0,        // use default DB
 	})
-
-	// for i := 0; i < 106; i++ {
-	// 	client.Set(ctx, "key"+strconv.Itoa(i), "value"+strconv.Itoa(i), 0)
-	// }
-
 	var cursor uint64
 	var n int
 	for {

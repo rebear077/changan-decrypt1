@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/FISCO-BCOS/go-sdk/conf"
@@ -24,8 +23,8 @@ type LogData struct {
 	Info      string
 }
 
-type InvoiceInformation struct {
-	id int
+type InvoiceInformationSearch struct {
+	id string
 }
 
 func NewSqlCtr() *SqlCtr {
@@ -52,16 +51,16 @@ func NewSqlCtr() *SqlCtr {
 	}
 }
 
-func (s *SqlCtr) InvoiceInformationSearchKey(request *http.Request) InvoiceInformation {
+func (s *SqlCtr) InvoiceInformationIndex(request *http.Request) *InvoiceInformationSearch {
 	query := request.URL.Query()
-	id := -1
+	id := ""
 	if len(query["id"]) > 0 {
-		id, _ = strconv.Atoi(query["id"][0])
+		id = query["id"][0]
 	}
-	var index InvoiceInformation
-	return index{
-		id: id,
+	index := InvoiceInformationSearch{
+		id,
 	}
+	return &index
 }
 
 // 插入日志数据

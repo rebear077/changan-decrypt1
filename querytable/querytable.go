@@ -3,16 +3,19 @@ package querytable
 import (
 	"fmt"
 	"net/http"
+	"reflect"
 
 	decrypt "github.com/FISCO-BCOS/go-sdk/decodeMysql"
+	sql "github.com/FISCO-BCOS/go-sdk/sqlController"
 )
 
 func DecryptInvoiceInformation(writer http.ResponseWriter, request *http.Request) {
 	decrypte := decrypt.NewSqlCtr()
-
-	ret, _ := decrypte.QueryInvoiceInformation("u_t_invoice_information", id)
-	// ret, _ := decrypte.QueryTablesByOrder("select * from u_t_invoice_information")
-	// fmt.Println(len(ret))
+	Sql := sql.NewSqlCtr()
+	slice := Sql.InvoiceInformationIndex(request)
+	immutable := reflect.ValueOf(slice).Elem()
+	id := immutable.FieldByName("id").String()
+	ret := decrypte.QueryInvoiceInformation("u_t_invoice_information", id)
 	jsonData := decrypte.ConvertoStruct("InvoiceInformation", ret)
 	fmt.Fprint(writer, jsonData)
 }

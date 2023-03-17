@@ -52,7 +52,15 @@ func NewSqlCtr() *SqlCtr {
 	}
 }
 
-// func (s *SqlCtr) QueryInvoiceInformation
+func (s *SqlCtr) QueryInvoiceInformation(tablename string, id string) []string {
+	var ret []string
+	if id == "" {
+		ret, _ = s.QueryTablesByOrder("select * from u_t_invoice_information")
+	} else {
+		ret, _ = s.QueryTablesByOrder("select * from u_t_invoice_information where id = " + id)
+	}
+	return ret
+}
 
 func (s *SqlCtr) QueryTablesByOrder(order string) ([]string, error) {
 	in_stmt, err := s.db.Prepare(order)

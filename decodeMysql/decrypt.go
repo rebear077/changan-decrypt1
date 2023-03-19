@@ -62,6 +62,26 @@ func (s *SqlCtr) QueryInvoiceInformation(tablename string, id string) []string {
 	return ret
 }
 
+func (s *SqlCtr) QueryFinancingIntention(tablename string, id string) []string {
+	var ret []string
+	if id == "" {
+		ret, _ = s.QueryTablesByOrder("select * from u_t_supplier_financing_application")
+	} else {
+		ret, _ = s.QueryTablesByOrder("select * from u_t_supplier_financing_application where id = " + id)
+	}
+	return ret
+}
+
+func (s *SqlCtr) QueryCollectionAccount(tablename string, id string) []string {
+	var ret []string
+	if id == "" {
+		ret, _ = s.QueryTablesByOrder("select * from u_t_push_payment_accounts")
+	} else {
+		ret, _ = s.QueryTablesByOrder("select * from u_t_push_payment_accounts where id = " + id)
+	}
+	return ret
+}
+
 func (s *SqlCtr) QueryTablesByOrder(order string) ([]string, error) {
 	in_stmt, err := s.db.Prepare(order)
 	if err != nil {

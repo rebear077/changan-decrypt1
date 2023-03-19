@@ -562,7 +562,7 @@ func (s *SqlCtr) ConvertoStruct(method string, data []string) string {
 		if err != nil {
 			fmt.Println(err)
 		}
-		// fmt.Println(string(ans))
+		fmt.Println(string(ans))
 		return string(ans)
 
 	case "EnterpoolDataPlaninfos":

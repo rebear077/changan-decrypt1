@@ -2,6 +2,7 @@ package sql
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -21,10 +22,6 @@ type LogData struct {
 	Timestamp string
 	Type      string
 	Info      string
-}
-
-type InvoiceInformationSearch struct {
-	id string
 }
 
 func NewSqlCtr() *SqlCtr {
@@ -51,6 +48,7 @@ func NewSqlCtr() *SqlCtr {
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 func (s *SqlCtr) InvoiceInformationIndex(request *http.Request) *InvoiceInformationSearch {
 	query := request.URL.Query()
 	id := ""
@@ -62,6 +60,65 @@ func (s *SqlCtr) InvoiceInformationIndex(request *http.Request) *InvoiceInformat
 	}
 	return &index
 }
+
+func (s *SqlCtr) InvoiceinfoToMap(ret []string) (map[string]map[string]string, error) {
+	invoiceInfoStruct := handleInvoiceInfo(ret)
+	ans, err := json.Marshal(invoiceInfoStruct)
+	if err != nil {
+		return nil, err
+	}
+	input := string(ans)
+	var data []map[string]string
+	if err := json.Unmarshal([]byte(input), &data); err != nil {
+		return nil, err
+	}
+
+	result := make(map[string]map[string]string)
+
+	for _, item := range data {
+		key1 := item["certificateId"]
+		key2 := item["customerId"]
+		key3 := item["corpName"]
+		key4 := item["certificateType"]
+		key5 := item["interCustomerId"]
+		delete(item, "certificateId")
+		delete(item, "customerId")
+		delete(item, "corpName")
+		delete(item, "certificateType")
+		delete(item, "interCustomerId")
+		result[key1+"|"+key2+"|"+key3+"|"+key4+"|"+key5] = item
+	}
+	return result, nil
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func (s *SqlCtr) FinancingIntentionIndex(request *http.Request) *FinancingIntentionSearch {
+	query := request.URL.Query()
+	id := ""
+	if len(query["id"]) > 0 {
+		id = query["id"][0]
+	}
+	index := FinancingIntentionSearch{
+		id,
+	}
+	return &index
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+func (s *SqlCtr) CollectionAccountIndex(request *http.Request) *CollectionAccountSearch {
+	query := request.URL.Query()
+	id := ""
+	if len(query["id"]) > 0 {
+		id = query["id"][0]
+	}
+	index := CollectionAccountSearch{
+		id,
+	}
+	return &index
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // 插入日志数据
 func (s *SqlCtr) InsertLogs(Timestamp string, Type string, Info string) error {

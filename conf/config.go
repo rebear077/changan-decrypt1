@@ -181,7 +181,6 @@ func ParseConfig(buffer []byte) ([]Config, error) {
 	} else {
 		return nil, fmt.Errorf("network has not been set")
 	}
-
 	return configs, nil
 }
 

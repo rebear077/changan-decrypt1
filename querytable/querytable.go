@@ -64,14 +64,22 @@ func DecryptEnterpoolDataUsedinfos(writer http.ResponseWriter, request *http.Req
 
 func DecryptFinancingIntention(writer http.ResponseWriter, request *http.Request) {
 	decrypte := decrypt.NewSqlCtr()
-	ret, _ := decrypte.QueryTablesByOrder("select * from u_t_supplier_financing_application")
+	Sql := sql.NewSqlCtr()
+	slice := Sql.FinancingIntentionIndex(request)
+	immutable := reflect.ValueOf(slice).Elem()
+	id := immutable.FieldByName("id").String()
+	ret := decrypte.QueryFinancingIntention("u_t_supplier_financing_application", id)
 	jsonData := decrypte.ConvertoStruct("FinancingIntention", ret)
 	fmt.Fprint(writer, jsonData)
 }
 
 func DecryptCollectionAccount(writer http.ResponseWriter, request *http.Request) {
 	decrypte := decrypt.NewSqlCtr()
-	ret, _ := decrypte.QueryTablesByOrder("select * from u_t_push_payment_accounts")
+	Sql := sql.NewSqlCtr()
+	slice := Sql.CollectionAccountIndex(request)
+	immutable := reflect.ValueOf(slice).Elem()
+	id := immutable.FieldByName("id").String()
+	ret := decrypte.QueryCollectionAccount("u_t_push_payment_accounts", id)
 	jsonData := decrypte.ConvertoStruct("CollectionAccount", ret)
 	fmt.Fprint(writer, jsonData)
 }

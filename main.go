@@ -32,6 +32,7 @@ func main() {
 	http.HandleFunc("/asl/universal/decryptEnterpoolDataUsedinfos", querytable.DecryptEnterpoolDataUsedinfos)
 	http.HandleFunc("/asl/universal/decryptFinancingIntention", querytable.DecryptFinancingIntention)
 	http.HandleFunc("/asl/universal/decryptCollectionAccount", querytable.DecryptCollectionAccount)
+
 	// err := http.ListenAndServeTLS(":8440", "connApi/confs/server.pem", "connApi/confs/server.key", nil)
 	err := http.ListenAndServe(":8440", nil)
 	if err != nil {

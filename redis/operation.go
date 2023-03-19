@@ -4,10 +4,23 @@ import (
 	"context"
 
 	"github.com/redis/go-redis/v9"
+	"github.com/sirupsen/logrus"
 )
 
 type RedisOperator struct {
 	rdb *redis.Client
+}
+type Rediser interface {
+	Set(ctx context.Context, key string, values ...interface{}) error
+	Get(ctx context.Context, key, field string) (string, error)
+	GetAll(ctx context.Context, key string) (map[string]string, error)
+	GetKeys(ctx context.Context, key string) ([]string, error)
+	GetHashLen(ctx context.Context, key string) (int64, error)
+	MultipleGet(ctx context.Context, key string, fields ...string) ([]interface{}, error)
+	MultipleSet(ctx context.Context, key string, values map[string]interface{}) error
+	Delete(ctx context.Context, key string, fields ...string) error
+	Exists(ctx context.Context, key, field string) (bool, error)
+	Scan(ctx context.Context, condition string) int
 }
 
 // 初始化一个redis客户端
@@ -113,4 +126,33 @@ func (operator *RedisOperator) Delete(ctx context.Context, key string, fields ..
 func (operator *RedisOperator) Exists(ctx context.Context, key, field string) (bool, error) {
 	res, err := operator.rdb.HExists(ctx, key, field).Result()
 	return res, err
+}
+
+// 扫描当前redis数据库中包含的主键数量
+func (operator *RedisOperator) Scan(ctx context.Context, condition string) int {
+	var cursor uint64
+	var n int
+	for {
+		var keys []string
+		var err error
+		//*扫描所有key，每次20条
+		keys, cursor, err = operator.rdb.Scan(ctx, cursor, condition, 20).Result()
+		if err != nil {
+			panic(err)
+		}
+		n += len(keys)
+		logrus.Printf("\nfound %d keys\n", n)
+		// var value []string
+		// for _, key := range keys {
+		// 	value, err = operator.rdb.HKeys(ctx, key).Result()
+		// 	if err != nil {
+		// 		fmt.Println(err)
+		// 	}
+		// 	fmt.Printf("%v %v\n", key, value)
+		// }
+		if cursor == 0 {
+			break
+		}
+	}
+	return n
 }

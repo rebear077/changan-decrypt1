@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 
-	server "github.com/FISCO-BCOS/go-sdk/backend"
 	"github.com/FISCO-BCOS/go-sdk/conf"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/sirupsen/logrus"
@@ -102,7 +101,7 @@ func (s *SqlCtr) QueryTablesByOrder(order string) ([]string, error) {
 			count++
 			continue
 		}
-		serve := server.NewServer()
+		serve := NewDecrypter()
 		//解密对称密钥
 		// fmt.Println("key: ", []byte(record.Key))
 		// fmt.Println("hash: ", record.Hash)
@@ -148,7 +147,7 @@ func (s *SqlCtr) QueryTablesByOrder2(order string) ([]string, error) {
 			count++
 			continue
 		}
-		serve := server.NewServer()
+		serve := NewDecrypter()
 		symkey, err := serve.DecryptSymkey([]byte(record.Key))
 		if err != nil {
 			logrus.Infof("利用私钥解密对称密钥失败")

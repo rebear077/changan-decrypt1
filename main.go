@@ -3,11 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"time"
 
-	"github.com/FISCO-BCOS/go-sdk/querytable"
 	queue "github.com/FISCO-BCOS/go-sdk/structure"
 	types "github.com/FISCO-BCOS/go-sdk/type"
 	"github.com/golang/protobuf/proto"
@@ -158,23 +156,23 @@ func checkError(err error) {
 // 	// querytable.DecryptCollectionAccount(decrypte)
 // }
 
-func main() {
-	// decrypte := decrypt.NewSqlCtr()
-	// for {
-	http.HandleFunc("/asl/universal/decryptInvoiceInformation", querytable.DecryptInvoiceInformation)
-	http.HandleFunc("/asl/universal/decryptHistoricaltransactionUsedinfos", querytable.DecryptHistoricaltransactionUsedinfos)
-	http.HandleFunc("/asl/universal/decryptHistoricaltransactionSettleinfos", querytable.DecryptHistoricaltransactionSettleinfos)
-	http.HandleFunc("/asl/universal/decryptHistoricaltransactionOrderinfos", querytable.DecryptHistoricaltransactionOrderinfos)
-	http.HandleFunc("/asl/universal/decryptHistoricaltransactionReceivableinfos", querytable.DecryptHistoricaltransactionReceivableinfos)
-	http.HandleFunc("/asl/universal/decryptEnterpoolDataPlaninfos", querytable.DecryptEnterpoolDataPlaninfos)
-	http.HandleFunc("/asl/universal/decryptEnterpoolDataUsedinfos", querytable.DecryptEnterpoolDataUsedinfos)
-	http.HandleFunc("/asl/universal/decryptFinancingIntention", querytable.DecryptFinancingIntention)
-	http.HandleFunc("/asl/universal/decryptCollectionAccount", querytable.DecryptCollectionAccount)
+// func main() {
+// 	// decrypte := decrypt.NewSqlCtr()
+// 	// for {
+// 	http.HandleFunc("/asl/universal/decryptInvoiceInformation", querytable.DecryptInvoiceInformation)
+// 	http.HandleFunc("/asl/universal/decryptHistoricaltransactionUsedinfos", querytable.DecryptHistoricaltransactionUsedinfos)
+// 	http.HandleFunc("/asl/universal/decryptHistoricaltransactionSettleinfos", querytable.DecryptHistoricaltransactionSettleinfos)
+// 	http.HandleFunc("/asl/universal/decryptHistoricaltransactionOrderinfos", querytable.DecryptHistoricaltransactionOrderinfos)
+// 	http.HandleFunc("/asl/universal/decryptHistoricaltransactionReceivableinfos", querytable.DecryptHistoricaltransactionReceivableinfos)
+// 	http.HandleFunc("/asl/universal/decryptEnterpoolDataPlaninfos", querytable.DecryptEnterpoolDataPlaninfos)
+// 	http.HandleFunc("/asl/universal/decryptEnterpoolDataUsedinfos", querytable.DecryptEnterpoolDataUsedinfos)
+// 	http.HandleFunc("/asl/universal/decryptFinancingIntention", querytable.DecryptFinancingIntention)
+// 	http.HandleFunc("/asl/universal/decryptCollectionAccount", querytable.DecryptCollectionAccount)
 
-	// err := http.ListenAndServeTLS(":8440", "connApi/confs/server.pem", "connApi/confs/server.key", nil)
-	err := http.ListenAndServe(":8440", nil)
-	if err != nil {
-		log.Fatalf("启动 HTTPS 服务器失败: %v", err)
-	}
-	// }
-}
+// 	// err := http.ListenAndServeTLS(":8440", "connApi/confs/server.pem", "connApi/confs/server.key", nil)
+// 	err := http.ListenAndServe(":8440", nil)
+// 	if err != nil {
+// 		log.Fatalf("启动 HTTPS 服务器失败: %v", err)
+// 	}
+// 	// }
+// }

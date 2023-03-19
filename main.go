@@ -6,7 +6,10 @@ import (
 	"os"
 	"time"
 
+	queue "github.com/FISCO-BCOS/go-sdk/structure"
+	types "github.com/FISCO-BCOS/go-sdk/type"
 	"github.com/golang/protobuf/proto"
+	"github.com/sirupsen/logrus"
 	"github.com/withlin/canal-go/client"
 	pbe "github.com/withlin/canal-go/protocol/entry"
 )
@@ -80,7 +83,7 @@ func printEntry(entrys []pbe.Entry) {
 				if eventType == pbe.EventType_DELETE {
 					printColumn(rowData.GetBeforeColumns())
 				} else if eventType == pbe.EventType_INSERT {
-					printColumn(rowData.GetAfterColumns())
+					printInsert(rowData.GetAfterColumns())
 				} else {
 					fmt.Println("-------> before")
 					printColumn(rowData.GetBeforeColumns())
@@ -91,7 +94,42 @@ func printEntry(entrys []pbe.Entry) {
 		}
 	}
 }
+func printInsert(columns []*pbe.Column) {
+	rawdata := new(types.RawSQLData)
+	var queue = queue.NewCircleQueue(10)
+	for _, col := range columns {
+		// fmt.Println(col.GetName())
+		// fmt.Println(fmt.Sprintf("%s", col.GetValue()))
+		// fmt.Println(col.GetValue())
 
+		err := queue.Add(col.GetValue())
+		if err != nil {
+			logrus.Errorln(err)
+			os.Exit(1)
+		}
+		// fmt.Println("--------------------------")
+		// fmt.Println([]byte(col.GetValue()))
+		// fmt.Println("=============================")
+		// fmt.Println(fmt.Sprintf("%s:%s", col.GetName(), col.GetValue()))
+	}
+	rawdata.SQLId, _ = queue.Remove()
+	rawdata.Num, _ = queue.Remove()
+	rawdata.Status, _ = queue.Remove()
+	rawdata.ID, _ = queue.Remove()
+	rawdata.Time, _ = queue.Remove()
+	rawdata.Data, _ = queue.Remove()
+	rawdata.Key, _ = queue.Remove()
+	rawdata.Hash, _ = queue.Remove()
+	fmt.Println([]byte(rawdata.SQLId))
+	fmt.Println([]byte(rawdata.Num))
+	fmt.Println([]byte(rawdata.Status))
+	fmt.Println([]byte(rawdata.ID))
+	fmt.Println([]byte(rawdata.Time))
+	fmt.Println([]byte(rawdata.Data))
+	fmt.Println([]byte(rawdata.Key))
+	fmt.Println([]byte(rawdata.Hash))
+
+}
 func printColumn(columns []*pbe.Column) {
 	for _, col := range columns {
 		fmt.Println(fmt.Sprintf("%s:%s", col.GetName(), col.GetValue()))

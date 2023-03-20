@@ -1,16 +1,6 @@
 package types
 
-type RawSQLDataWithTime struct {
-	SQLId  string
-	Num    string
-	Status string
-	ID     string
-	Time   string
-	Data   string
-	Key    string
-	Hash   string
-}
-type RawSQLDataWithoutTime struct {
+type RawSQLData struct {
 	SQLId  string
 	Num    string
 	Status string
@@ -186,57 +176,26 @@ type CollectionAccount struct {
 	Certificatetype string `json:"CertificateType"`
 	Intercustomerid string `json:"InterCustomerId"`
 }
+type RawInvoiceInformation struct {
+	Certificateid   string         `json:"certificateId"`
+	Customerid      string         `json:"customerId"`
+	Corpname        string         `json:"corpName"`
+	Certificatetype string         `json:"certificateType"`
+	Intercustomerid string         `json:"interCustomerId"`
+	Invoiceinfos    []Invoiceinfos `json:"invoiceInfos"`
+}
 
-// type PublicKey struct {
-// 	SId    string
-// 	Num    string
-// 	Status string
-// 	Id     string
-// 	Role   string
-// 	Key    string
-// }
-// type EncryptedInvoiceInformation struct {
-// 	SId    string
-// 	Num    string
-// 	Status string
-// 	Id     string
-// 	Data   string
-// 	Key    string
-// 	Hash   string
-// }
-// type EncryptedEnterpoolData struct {
-// 	SId    string
-// 	Num    string
-// 	Status string
-// 	Id     string
-// 	Data   string
-// 	Key    string
-// 	Hash   string
-// }
-// type EncryptedTransactionHistory struct {
-// 	SId    string
-// 	Num    string
-// 	Status string
-// 	Id     string
-// 	Data   string
-// 	Key    string
-// 	Hash   string
-// }
-// type EncryptedFinancingIntention struct {
-// 	SId    string
-// 	Num    string
-// 	Status string
-// 	Id     string
-// 	Data   string
-// 	Key    string
-// 	Hash   string
-// }
-// type EncryptedCollectionAccount struct {
-// 	SId    string
-// 	Num    string
-// 	Status string
-// 	Id     string
-// 	Data   string
-// 	Key    string
-// 	Hash   string
-// }
+type Invoiceinfos struct {
+	Invoicenotaxamt string `json:"InvoiceNotaxAmt"`
+	Invoiceccy      string `json:"InvoiceCcy"`
+	Sellername      string `json:"SellerName"`
+	Invoicetype     string `json:"InvoiceType"`
+	Buyername       string `json:"BuyerName"`
+	Buyerusccode    string `json:"BuyerUsccode"`
+	Invoicedate     string `json:"InvoiceDate"`
+	Sellerusccode   string `json:"SellerUsccode"`
+	Invoicecode     string `json:"InvoiceCode"`
+	Invoicenum      string `json:"InvoiceNum"`
+	Checkcode       string `json:"CheckCode"`
+	Invoiceamt      string `json:"InvoiceAmt"`
+}

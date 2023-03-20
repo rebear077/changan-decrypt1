@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 	"time"
 
 	queue "github.com/FISCO-BCOS/go-sdk/structure"
@@ -15,8 +16,10 @@ import (
 )
 
 type Connector struct {
-	conn  *client.SimpleCanalConnector
-	queue *queue.CircleQueue
+	conn    *client.SimpleCanalConnector
+	queue   *queue.CircleQueue
+	RawData []*types.RawSQLData
+	Lock    sync.RWMutex
 }
 
 func NewConnector(table string) *Connector {
@@ -46,9 +49,11 @@ func NewConnector(table string) *Connector {
 		os.Exit(1)
 	}
 	queue := queue.NewCircleQueue(20)
+	raw := make([]*types.RawSQLData, 0)
 	return &Connector{
-		conn:  connector,
-		queue: queue,
+		conn:    connector,
+		queue:   queue,
+		RawData: raw,
 	}
 }
 
@@ -80,8 +85,8 @@ func (c *Connector) dealMessage(entrys []pbe.Entry) {
 		checkError(err)
 		if rowChange != nil {
 			eventType := rowChange.GetEventType()
-			header := entry.GetHeader()
-			fmt.Println(fmt.Sprintf("================> binlog[%s : %d],name[%s,%s], eventType: %s", header.GetLogfileName(), header.GetLogfileOffset(), header.GetSchemaName(), header.GetTableName(), header.GetEventType()))
+			// header := entry.GetHeader()
+			// fmt.Println(fmt.Sprintf("================> binlog[%s : %d],name[%s,%s], eventType: %s", header.GetLogfileName(), header.GetLogfileOffset(), header.GetSchemaName(), header.GetTableName(), header.GetEventType()))
 
 			for _, rowData := range rowChange.GetRowDatas() {
 				if eventType == pbe.EventType_DELETE {
@@ -99,7 +104,7 @@ func (c *Connector) dealMessage(entrys []pbe.Entry) {
 	}
 }
 func (c *Connector) dealInsertMessage(columns []*pbe.Column) {
-	rawdata := new(types.RawSQLDataWithTime)
+	rawdata := new(types.RawSQLData)
 	for _, col := range columns {
 		err := c.queue.Add(col.GetValue())
 		if err != nil {
@@ -112,10 +117,12 @@ func (c *Connector) dealInsertMessage(columns []*pbe.Column) {
 	rawdata.Num, _ = c.queue.Remove()
 	rawdata.Status, _ = c.queue.Remove()
 	rawdata.ID, _ = c.queue.Remove()
-	rawdata.Time, _ = c.queue.Remove()
 	rawdata.Data, _ = c.queue.Remove()
 	rawdata.Key, _ = c.queue.Remove()
 	rawdata.Hash, _ = c.queue.Remove()
+	c.Lock.Lock()
+	c.RawData = append(c.RawData, rawdata)
+	c.Lock.Unlock()
 	// fmt.Println(rawdata)
 	//TODO:解密和存储
 }

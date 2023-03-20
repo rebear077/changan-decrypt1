@@ -1,4 +1,4 @@
-package decrypt
+package sql
 
 import (
 	"io/ioutil"
@@ -8,21 +8,16 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// 解密用的
 type Decrypter struct {
 	encrypte *encrypter.Encrypter
-	// sql          *sql.SqlCtr
-	contractAddr string
-	symKey       []byte
-	pubKey       []byte
-	priKey       []byte
+	symKey   []byte
+	pubKey   []byte
+	priKey   []byte
 }
 
 func NewDecrypter() *Decrypter {
 	en := encrypter.NewEncrypter()
-	addr, err := getContractAddr("configs/contractAddress.txt")
-	if err != nil {
-		logrus.Fatalln(err)
-	}
 	symkey, err := getSymKey("configs/symPri.txt")
 	if err != nil {
 		logrus.Fatalln(err)
@@ -38,11 +33,9 @@ func NewDecrypter() *Decrypter {
 
 	return &Decrypter{
 		encrypte: en,
-		// sql:          sql.NewSqlCtr(),
-		contractAddr: addr,
-		symKey:       symkey,
-		pubKey:       pubkey,
-		priKey:       prikey,
+		symKey:   symkey,
+		pubKey:   pubkey,
+		priKey:   prikey,
 	}
 }
 
@@ -53,23 +46,6 @@ func (d *Decrypter) ValidateHash(hash []byte, plain []byte) bool {
 	} else {
 		return false
 	}
-}
-func getContractAddr(path string) (string, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return "", err
-	}
-	stat, _ := file.Stat()
-	addr := make([]byte, stat.Size())
-	_, err = file.Read(addr)
-	if err != nil {
-		return "", err
-	}
-	err = file.Close()
-	if err != nil {
-		return "", err
-	}
-	return string(addr), nil
 }
 func getSymKey(path string) ([]byte, error) {
 	filesymPrivate, err := os.Open(path)
@@ -102,8 +78,6 @@ func getRSAPrivateKey(path string) ([]byte, error) {
 
 func (d *Decrypter) DecryptSymkey(ensymkey []byte) ([]byte, error) {
 	symkey, err := d.encrypte.AsymDecrypt(ensymkey, d.priKey)
-	// fmt.Println("私钥： ", string(s.priKey))
-	// fmt.Println(err)
 	return symkey, err
 }
 

@@ -1,4 +1,4 @@
-package decrypt
+package sql
 
 import (
 	"encoding/json"
@@ -9,6 +9,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// 针对历史交易和入池信息这两个表单，由于包含多个list，需要将header和list的内容分别提取成header和info，header包含多个字段。字段之间通过逗号分割，list形式为[**,**,**|**,**,**]
 func sliceinfohandler(str string) (string, string) {
 	flag := 0
 	header := ""
@@ -39,40 +40,7 @@ func sliceinfohandler(str string) (string, string) {
 	return header, infos
 }
 
-// func handleInvoiceInfo(data []string) []types.InvoiceInformation {
-// 	//如果其他输入中存在[]怎么办？
-// 	//最后返回的结果，目前是结构体的切片
-// 	var INV []types.InvoiceInformation
-// 	for i := 0; i < len(data); i++ {
-// 		str := data[i]
-// 		//fmt.Println(str)
-// 		str_split := strings.Split(str, ",")
-
-// 		ICfo := types.InvoiceInformation{
-// 			Certificateid:   str_split[0],
-// 			Customerid:      str_split[1],
-// 			Corpname:        str_split[2],
-// 			Certificatetype: str_split[3],
-// 			Intercustomerid: str_split[4],
-// 			Invoicenotaxamt: str_split[5],
-// 			Invoiceccy:      str_split[6],
-// 			Sellername:      str_split[7],
-// 			Invoicetype:     str_split[8],
-// 			Buyername:       str_split[9],
-// 			Buyerusccode:    str_split[10],
-// 			Invoicedate:     str_split[11],
-// 			Sellerusccode:   str_split[12],
-// 			Invoicecode:     str_split[13],
-// 			Invoicenum:      str_split[14],
-// 			Checkcode:       str_split[15],
-// 			Invoiceamt:      str_split[16],
-// 		}
-// 		INV = append(INV, ICfo)
-// 	}
-// 	// fmt.Println(INV)
-// 	return INV
-// }
-
+// 针对发票信息，进入的参数是解密后的明文，转换成结构体
 func handleInvoiceInformation(data []string) []types.InvoiceInformation {
 	//如果其他输入中存在[]怎么办？
 	//最后返回的结果，目前是结构体的切片
@@ -106,6 +74,7 @@ func handleInvoiceInformation(data []string) []types.InvoiceInformation {
 	return INV
 }
 
+// 针对历史交易信息的used infos，将解密后的明文转换成结构体
 func handleHistoricaltransactionUsedinfos(data []string) []types.TransactionHistoryUsedinfos {
 	var HUI []types.TransactionHistoryUsedinfos
 	for i := 0; i < len(data); i++ {
@@ -142,6 +111,7 @@ func handleHistoricaltransactionUsedinfos(data []string) []types.TransactionHist
 	return HUI
 }
 
+// 针对历史交易信息的 settle infos，将解密后的明文转换成结构体
 func handleHistoricaltransactionSettleinfos(data []string) []types.TransactionHistorySettleinfos {
 	var HSI []types.TransactionHistorySettleinfos
 	for i := 0; i < len(data); i++ {
@@ -177,6 +147,7 @@ func handleHistoricaltransactionSettleinfos(data []string) []types.TransactionHi
 	return HSI
 }
 
+// 针对历史交易信息的 order infos，将解密后的明文转换成结构体
 func handleHistoricaltransactionOrderinfos(data []string) []types.TransactionHistoryOrderinfos {
 	var HOI []types.TransactionHistoryOrderinfos
 	for i := 0; i < len(data); i++ {
@@ -212,6 +183,7 @@ func handleHistoricaltransactionOrderinfos(data []string) []types.TransactionHis
 	return HOI
 }
 
+// 针对历史交易信息的 receivable infos，将解密后的明文转换成结构体
 func handleHistoricaltransactionReceivableinfos(data []string) []types.TransactionHistoryReceivableinfos {
 	var HRI []types.TransactionHistoryReceivableinfos
 	for i := 0; i < len(data); i++ {
@@ -247,6 +219,7 @@ func handleHistoricaltransactionReceivableinfos(data []string) []types.Transacti
 	return HRI
 }
 
+// 针对入池信息的 plan infos，将解密后的明文转换成结构体
 func handleEnterpoolDataPlaninfos(data []string) []types.EnterpoolDataPlaninfos {
 	//如果其他输入中存在[]怎么办？
 	//最后返回的结果，目前是结构体的切片
@@ -285,6 +258,7 @@ func handleEnterpoolDataPlaninfos(data []string) []types.EnterpoolDataPlaninfos 
 	return EPD
 }
 
+// 针对入池信息的 provider used infos，将解密后的明文转换成结构体
 func handleEnterpoolDataProviderusedinfos(data []string) []types.EnterpoolDataProviderusedinfos {
 	var EPD []types.EnterpoolDataProviderusedinfos
 	for i := 0; i < len(data); i++ {
@@ -319,6 +293,7 @@ func handleEnterpoolDataProviderusedinfos(data []string) []types.EnterpoolDataPr
 	return EPD
 }
 
+// 处理融资意向信息，转换成结构体
 func handleFinancingIntention(data []string) []types.FinancingIntention {
 	var FCI []types.FinancingIntention
 	for i := 0; i < len(data); i++ {
@@ -360,6 +335,7 @@ func handleFinancingIntention(data []string) []types.FinancingIntention {
 	return FCI
 }
 
+// 处理回款账户信息，转换成结构体
 func handleCollectionAccount(data []string) []types.CollectionAccount {
 	var COLA []types.CollectionAccount
 	for i := 0; i < len(data); i++ {
@@ -395,6 +371,7 @@ func handleCollectionAccount(data []string) []types.CollectionAccount {
 	return COLA
 }
 
+// 将从数据库解密出来的数据从[]string先转换成结构体数组，然后转换成json
 func (s *SqlCtr) ConvertoStruct(method string, data []string) string {
 	switch method {
 	case "HistoricaltransactionUsedinfos":
@@ -480,30 +457,6 @@ func (s *SqlCtr) ConvertoStruct(method string, data []string) string {
 	}
 	return ""
 }
-
-// type InvoiceInformation struct {
-// 	Certificateid   string         `json:"certificateId"`
-// 	Customerid      string         `json:"customerId"`
-// 	Corpname        string         `json:"corpName"`
-// 	Certificatetype string         `json:"certificateType"`
-// 	Intercustomerid string         `json:"interCustomerId"`
-// 	Invoiceinfos    []Invoiceinfos `json:"invoiceInfos"`
-// }
-
-// type Invoiceinfos struct {
-// 	Invoicenotaxamt string `json:"InvoiceNotaxAmt"`
-// 	Invoiceccy      string `json:"InvoiceCcy"`
-// 	Sellername      string `json:"SellerName"`
-// 	Invoicetype     string `json:"InvoiceType"`
-// 	Buyername       string `json:"BuyerName"`
-// 	Buyerusccode    string `json:"BuyerUsccode"`
-// 	Invoicedate     string `json:"InvoiceDate"`
-// 	Sellerusccode   string `json:"SellerUsccode"`
-// 	Invoicecode     string `json:"InvoiceCode"`
-// 	Invoicenum      string `json:"InvoiceNum"`
-// 	Checkcode       string `json:"CheckCode"`
-// 	Invoiceamt      string `json:"InvoiceAmt"`
-// }
 
 // func handleHistoricaltransactionInformation(data []string) ([]TransactionHistoryUsedinfos, []TransactionHistorySettleinfos, []TransactionHistoryOrderinfos, []TransactionHistoryReceivableinfos) {
 // 	var HUI []TransactionHistoryUsedinfos

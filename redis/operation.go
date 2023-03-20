@@ -130,30 +130,33 @@ func (operator *RedisOperator) Exists(ctx context.Context, key, field string) (b
 }
 
 // 扫描当前redis数据库中包含的主键数量
-func (operator *RedisOperator) Scan(ctx context.Context, condition string) int {
+func (operator *RedisOperator) Scan(ctx context.Context, condition string) (int, []string) {
 	var cursor uint64
 	var n int
+	var keys []string
 	for {
-		var keys []string
+		var key []string
 		var err error
 		//*扫描所有key，每次20条
-		keys, cursor, err = operator.rdb.Scan(ctx, cursor, condition, 20).Result()
+		key, cursor, err = operator.rdb.Scan(ctx, cursor, condition, 20).Result()
 		if err != nil {
 			panic(err)
 		}
 		n += len(keys)
 		logrus.Printf("\nfound %d keys\n", n)
-		// var value []string
-		// for _, key := range keys {
-		// 	value, err = operator.rdb.HKeys(ctx, key).Result()
-		// 	if err != nil {
-		// 		fmt.Println(err)
-		// 	}
-		// 	fmt.Printf("%v %v\n", key, value)
-		// }
+		keys = append(keys, key...)
 		if cursor == 0 {
 			break
 		}
 	}
-	return n
+	return n, keys
+}
+func (operator *RedisOperator) FlushData(ctx context.Context) {
+
+	res, err := operator.rdb.FlushAll(ctx).Result()
+	if err != nil {
+		logrus.Errorln(err)
+		return
+	}
+	logrus.Infoln("清除redis所有数据:", res)
 }

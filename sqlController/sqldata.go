@@ -6,10 +6,10 @@ import (
 	types "github.com/FISCO-BCOS/go-sdk/type"
 )
 
-func handleInvoiceInfo(data []string) []types.InvoiceInformation {
+func handleInvoiceInfo(data []string) []*types.InvoiceInformation {
 	//如果其他输入中存在[]怎么办？
 	//最后返回的结果，目前是结构体的切片
-	var INV []types.InvoiceInformation
+	var INV []*types.InvoiceInformation
 	for i := 0; i < len(data); i++ {
 		str := data[i]
 		//fmt.Println(str)
@@ -34,7 +34,7 @@ func handleInvoiceInfo(data []string) []types.InvoiceInformation {
 			Checkcode:       str_split[15],
 			Invoiceamt:      str_split[16],
 		}
-		INV = append(INV, ICfo)
+		INV = append(INV, &ICfo)
 	}
 	// fmt.Println(INV)
 	return INV

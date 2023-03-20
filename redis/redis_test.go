@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	receive "github.com/FISCO-BCOS/go-sdk/receiveData"
+	types "github.com/FISCO-BCOS/go-sdk/type"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -79,14 +79,14 @@ func TestScan(t *testing.T) {
 		}
 	}
 }
-func packInvoice() receive.InvoiceInformation {
-	title := new(receive.InvoiceInformation)
+func packInvoice() types.RawInvoiceInformation {
+	title := new(types.RawInvoiceInformation)
 	title.Certificateid = "2018210071"
 	title.Customerid = "9527"
 	title.Corpname = "米其林轮胎"
 	title.Certificatetype = "中华人民共和国居民身份证"
 	title.Intercustomerid = "YU225007"
-	invoice := new(receive.Invoiceinfos)
+	invoice := new(types.Invoiceinfos)
 	invoice.Invoicenotaxamt = "960"
 	invoice.Invoiceccy = "人民币"
 	invoice.Sellername = "米其林轮胎"
@@ -128,7 +128,7 @@ func TestHset(t *testing.T) {
 func TestHGet(t *testing.T) {
 	dber := NewRedisOperator()
 	ctx := context.Background()
-	res, err := dber.Get(ctx, "9527:082976", "corpName")
+	res, err := dber.GetAll(ctx, "001")
 	if err != nil {
 		fmt.Println(err, "xxxxxx")
 	}
@@ -143,4 +143,15 @@ func TestFlush(t *testing.T) {
 		return
 	}
 	fmt.Println(res)
+}
+func TestHMSet(t *testing.T) {
+	dber := NewRedisOperator()
+	ctx := context.Background()
+	values := make(map[string]interface{})
+	values["name"] = "dyy"
+	values["age"] = 23
+	err := dber.MultipleSet(ctx, "001", values)
+	if err != nil {
+		fmt.Println(err)
+	}
 }

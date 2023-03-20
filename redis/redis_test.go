@@ -130,7 +130,17 @@ func TestHGet(t *testing.T) {
 	ctx := context.Background()
 	res, err := dber.Get(ctx, "9527:082976", "corpName")
 	if err != nil {
+		fmt.Println(err, "xxxxxx")
+	}
+	fmt.Println(res)
+}
+func TestFlush(t *testing.T) {
+	dber := NewRedisOperator()
+	ctx := context.Background()
+	res, err := dber.rdb.FlushAll(ctx).Result()
+	if err != nil {
 		fmt.Println(err)
+		return
 	}
 	fmt.Println(res)
 }

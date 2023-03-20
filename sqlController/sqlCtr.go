@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/FISCO-BCOS/go-sdk/conf"
+	types "github.com/FISCO-BCOS/go-sdk/type"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/sirupsen/logrus"
 )
@@ -49,14 +50,14 @@ func NewSqlCtr() *SqlCtr {
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
-func (s *SqlCtr) InvoiceInformationIndex(request *http.Request) *InvoiceInformationSearch {
+func (s *SqlCtr) InvoiceInformationIndex(request *http.Request) *types.InvoiceInformationSearch {
 	query := request.URL.Query()
 	id := ""
 	if len(query["id"]) > 0 {
 		id = query["id"][0]
 	}
-	index := InvoiceInformationSearch{
-		id,
+	index := types.InvoiceInformationSearch{
+		Id: id,
 	}
 	return &index
 }
@@ -93,27 +94,27 @@ func (s *SqlCtr) InvoiceinfoToMap(ret []string) (map[string]map[string]string, e
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (s *SqlCtr) FinancingIntentionIndex(request *http.Request) *FinancingIntentionSearch {
+func (s *SqlCtr) FinancingIntentionIndex(request *http.Request) *types.FinancingIntentionSearch {
 	query := request.URL.Query()
 	id := ""
 	if len(query["id"]) > 0 {
 		id = query["id"][0]
 	}
-	index := FinancingIntentionSearch{
-		id,
+	index := types.FinancingIntentionSearch{
+		Id: id,
 	}
 	return &index
 }
 
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func (s *SqlCtr) CollectionAccountIndex(request *http.Request) *CollectionAccountSearch {
+func (s *SqlCtr) CollectionAccountIndex(request *http.Request) *types.CollectionAccountSearch {
 	query := request.URL.Query()
 	id := ""
 	if len(query["id"]) > 0 {
 		id = query["id"][0]
 	}
-	index := CollectionAccountSearch{
-		id,
+	index := types.CollectionAccountSearch{
+		Id: id,
 	}
 	return &index
 }

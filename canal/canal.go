@@ -51,6 +51,8 @@ func NewConnector(table string) *Connector {
 		queue: queue,
 	}
 }
+
+// 开始运行canal
 func (c *Connector) Start() {
 	for {
 		message, err := c.conn.Get(100, nil, nil)
@@ -97,7 +99,7 @@ func (c *Connector) dealMessage(entrys []pbe.Entry) {
 	}
 }
 func (c *Connector) dealInsertMessage(columns []*pbe.Column) {
-	rawdata := new(types.RawSQLData)
+	rawdata := new(types.RawSQLDataWithTime)
 	for _, col := range columns {
 		err := c.queue.Add(col.GetValue())
 		if err != nil {

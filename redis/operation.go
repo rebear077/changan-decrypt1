@@ -59,6 +59,7 @@ func NewRedisOperator() *RedisOperator {
 // Note that it requires Redis v4 for multiple field/value pairs support.
 func (operator *RedisOperator) Set(ctx context.Context, key string, values ...interface{}) error {
 	err := operator.rdb.HSet(ctx, key, values).Err()
+
 	return err
 }
 

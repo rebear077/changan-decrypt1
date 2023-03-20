@@ -5,33 +5,13 @@ import (
 	"fmt"
 
 	"github.com/FISCO-BCOS/go-sdk/conf"
+	types "github.com/FISCO-BCOS/go-sdk/type"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/sirupsen/logrus"
 )
 
 type SqlCtr struct {
 	db *sql.DB
-}
-
-type EncodedInformation struct {
-	SqlId  string
-	Num    string
-	Status string
-	Id     string
-	Data   string
-	Key    string
-	Hash   string
-}
-
-type EncodedInformation2 struct {
-	SqlId  string
-	Num    string
-	Status string
-	Id     string
-	Time   string
-	Data   string
-	Key    string
-	Hash   string
 }
 
 func NewSqlCtr() *SqlCtr {
@@ -51,7 +31,8 @@ func NewSqlCtr() *SqlCtr {
 	}
 }
 
-func (s *SqlCtr) QueryInvoiceInformation(tablename string, id string) []string {
+// 查询mysql数据库中加密后的发票信息，如果id为空，则查找全部的信息
+func (s *SqlCtr) QueryInvoiceInformation(id string) []string {
 	var ret []string
 	if id == "" {
 		ret, _ = s.QueryTablesByOrder("select * from u_t_invoice_information")
@@ -61,7 +42,8 @@ func (s *SqlCtr) QueryInvoiceInformation(tablename string, id string) []string {
 	return ret
 }
 
-func (s *SqlCtr) QueryFinancingIntention(tablename string, id string) []string {
+// 查询mysql数据库中融资意向信息，如果id为空，则查找全部的信息
+func (s *SqlCtr) QueryFinancingIntention(id string) []string {
 	var ret []string
 	if id == "" {
 		ret, _ = s.QueryTablesByOrder("select * from u_t_supplier_financing_application")
@@ -71,7 +53,8 @@ func (s *SqlCtr) QueryFinancingIntention(tablename string, id string) []string {
 	return ret
 }
 
-func (s *SqlCtr) QueryCollectionAccount(tablename string, id string) []string {
+// 查询mysql数据库中回款账户信息，如果id为空，则查找全部的信息
+func (s *SqlCtr) QueryCollectionAccount(id string) []string {
 	var ret []string
 	if id == "" {
 		ret, _ = s.QueryTablesByOrder("select * from u_t_push_payment_accounts")
@@ -94,8 +77,8 @@ func (s *SqlCtr) QueryTablesByOrder(order string) ([]string, error) {
 	count := 0
 	i := 0
 	for rows.Next() {
-		record := &EncodedInformation{}
-		err = rows.Scan(&record.SqlId, &record.Num, &record.Status, &record.Id, &record.Data, &record.Key, &record.Hash)
+		record := &types.RawSQLDataWithoutTime{}
+		err = rows.Scan(&record.SQLId, &record.Num, &record.Status, &record.ID, &record.Data, &record.Key, &record.Hash)
 		if err != nil {
 			fmt.Println(err)
 			count++
@@ -140,8 +123,8 @@ func (s *SqlCtr) QueryTablesByOrder2(order string) ([]string, error) {
 	count := 0
 	i := 0
 	for rows.Next() {
-		record := &EncodedInformation2{}
-		err = rows.Scan(&record.SqlId, &record.Num, &record.Status, &record.Id, &record.Time, &record.Data, &record.Key, &record.Hash)
+		record := &types.RawSQLDataWithTime{}
+		err = rows.Scan(&record.SQLId, &record.Num, &record.Status, &record.ID, &record.Time, &record.Data, &record.Key, &record.Hash)
 		if err != nil {
 			fmt.Println(err)
 			count++

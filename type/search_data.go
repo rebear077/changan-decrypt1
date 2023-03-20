@@ -1,13 +1,13 @@
-package sql
+package types
 
 type InvoiceInformationSearch struct {
-	id string
+	Id string
 }
 
 type FinancingIntentionSearch struct {
-	id string
+	Id string
 }
 
 type CollectionAccountSearch struct {
-	id string
+	Id string
 }

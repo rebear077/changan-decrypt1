@@ -15,7 +15,7 @@ func DecryptInvoiceInformation(writer http.ResponseWriter, request *http.Request
 	slice := Sql.InvoiceInformationIndex(request)
 	immutable := reflect.ValueOf(slice).Elem()
 	id := immutable.FieldByName("id").String()
-	ret := decrypte.QueryInvoiceInformation("u_t_invoice_information", id)
+	ret := decrypte.QueryInvoiceInformation(id)
 	jsonData := decrypte.ConvertoStruct("InvoiceInformation", ret)
 	fmt.Fprint(writer, jsonData)
 }
@@ -68,7 +68,7 @@ func DecryptFinancingIntention(writer http.ResponseWriter, request *http.Request
 	slice := Sql.FinancingIntentionIndex(request)
 	immutable := reflect.ValueOf(slice).Elem()
 	id := immutable.FieldByName("id").String()
-	ret := decrypte.QueryFinancingIntention("u_t_supplier_financing_application", id)
+	ret := decrypte.QueryFinancingIntention(id)
 	jsonData := decrypte.ConvertoStruct("FinancingIntention", ret)
 	fmt.Fprint(writer, jsonData)
 }
@@ -79,7 +79,7 @@ func DecryptCollectionAccount(writer http.ResponseWriter, request *http.Request)
 	slice := Sql.CollectionAccountIndex(request)
 	immutable := reflect.ValueOf(slice).Elem()
 	id := immutable.FieldByName("id").String()
-	ret := decrypte.QueryCollectionAccount("u_t_push_payment_accounts", id)
+	ret := decrypte.QueryCollectionAccount(id)
 	jsonData := decrypte.ConvertoStruct("CollectionAccount", ret)
 	fmt.Fprint(writer, jsonData)
 }

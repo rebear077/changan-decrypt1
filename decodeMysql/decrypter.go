@@ -100,14 +100,6 @@ func getRSAPrivateKey(path string) ([]byte, error) {
 	return privateKey, err
 }
 
-// func (s *Server) InsertLog(level string, info string) {
-// 	time := time.Now().String()[0:19]
-// 	err := s.sql.InsertLogs(time, level, info)
-// 	if err != nil {
-// 		fmt.Println("....", err)
-// 	}
-// }
-
 func (d *Decrypter) DecryptSymkey(ensymkey []byte) ([]byte, error) {
 	symkey, err := d.encrypte.AsymDecrypt(ensymkey, d.priKey)
 	// fmt.Println("私钥： ", string(s.priKey))

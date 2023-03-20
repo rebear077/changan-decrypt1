@@ -5,166 +5,9 @@ import (
 	"fmt"
 	"strings"
 
+	types "github.com/FISCO-BCOS/go-sdk/type"
 	_ "github.com/go-sql-driver/mysql"
 )
-
-//发票信息推送接口
-type InvoiceInformation struct {
-	Certificateid   string `json:"certificateId"`
-	Customerid      string `json:"customerId"`
-	Corpname        string `json:"corpName"`
-	Certificatetype string `json:"certificateType"`
-	Intercustomerid string `json:"interCustomerId"`
-	Invoicenotaxamt string `json:"InvoiceNotaxAmt"`
-	Invoiceccy      string `json:"InvoiceCcy"`
-	Sellername      string `json:"SellerName"`
-	Invoicetype     string `json:"InvoiceType"`
-	Buyername       string `json:"BuyerName"`
-	Buyerusccode    string `json:"BuyerUsccode"`
-	Invoicedate     string `json:"InvoiceDate"`
-	Sellerusccode   string `json:"SellerUsccode"`
-	Invoicecode     string `json:"InvoiceCode"`
-	Invoicenum      string `json:"InvoiceNum"`
-	Checkcode       string `json:"CheckCode"`
-	Invoiceamt      string `json:"InvoiceAmt"`
-}
-
-// 推送历史交易信息接口
-// type TransactionHistory struct {
-// 	Customergrade   string            `json:"customerGrade"`
-// 	Certificatetype string            `json:"certificateType"`
-// 	Intercustomerid string            `json:"interCustomerId"`
-// 	Corpname        string            `json:"corpName"`
-// 	Financeid       string            `json:"financeId"`
-// 	Certificateid   string            `json:"certificateId"`
-// 	Customerid      string            `json:"customerId"`
-// 	Usedinfos       []Usedinfos       `json:"usedInfos"`
-// 	Settleinfos     []Settleinfos     `json:"settleInfos"`
-// 	Orderinfos      []Orderinfos      `json:"orderInfos"`
-// 	Receivableinfos []Receivableinfos `json:"receivableInfos"`
-// }
-
-type Usedinfos struct {
-	Tradeyearmonth string `json:"TradeYearMonth"`
-	Usedamount     string `json:"UsedAmount"`
-	Ccy            string `json:"Ccy"`
-}
-type Settleinfos struct {
-	Tradeyearmonth string `json:"TradeYearMonth"`
-	Settleamount   string `json:"SettleAmount"`
-	Ccy            string `json:"Ccy"`
-}
-type Orderinfos struct {
-	Tradeyearmonth string `json:"TradeYearMonth"`
-	Orderamount    string `json:"OrderAmount"`
-	Ccy            string `json:"Ccy"`
-}
-type Receivableinfos struct {
-	Tradeyearmonth   string `json:"TradeYearMonth"`
-	Receivableamount string `json:"ReceivableAmount"`
-	Ccy              string `json:"Ccy"`
-}
-
-type TransactionHistoryUsedinfos struct {
-	Customergrade   string      `json:"customerGrade"`
-	Certificatetype string      `json:"certificateType"`
-	Intercustomerid string      `json:"interCustomerId"`
-	Corpname        string      `json:"corpName"`
-	Financeid       string      `json:"financeId"`
-	Certificateid   string      `json:"certificateId"`
-	Customerid      string      `json:"customerId"`
-	Usedinfos       []Usedinfos `json:"usedInfos"`
-}
-
-type TransactionHistorySettleinfos struct {
-	Customergrade   string        `json:"customerGrade"`
-	Certificatetype string        `json:"certificateType"`
-	Intercustomerid string        `json:"interCustomerId"`
-	Corpname        string        `json:"corpName"`
-	Financeid       string        `json:"financeId"`
-	Certificateid   string        `json:"certificateId"`
-	Customerid      string        `json:"customerId"`
-	Settleinfos     []Settleinfos `json:"settleInfos"`
-}
-
-type TransactionHistoryOrderinfos struct {
-	Customergrade   string       `json:"customerGrade"`
-	Certificatetype string       `json:"certificateType"`
-	Intercustomerid string       `json:"interCustomerId"`
-	Corpname        string       `json:"corpName"`
-	Financeid       string       `json:"financeId"`
-	Certificateid   string       `json:"certificateId"`
-	Customerid      string       `json:"customerId"`
-	Orderinfos      []Orderinfos `json:"orderInfos"`
-}
-
-type TransactionHistoryReceivableinfos struct {
-	Customergrade   string            `json:"customerGrade"`
-	Certificatetype string            `json:"certificateType"`
-	Intercustomerid string            `json:"interCustomerId"`
-	Corpname        string            `json:"corpName"`
-	Financeid       string            `json:"financeId"`
-	Certificateid   string            `json:"certificateId"`
-	Customerid      string            `json:"customerId"`
-	Receivableinfos []Receivableinfos `json:"receivableInfos"`
-}
-
-type EnterpoolDataPlaninfos struct {
-	Datetimepoint     string      `json:"dateTimePoint"`
-	Ccy               string      `json:"ccy"`
-	Customerid        string      `json:"customerId"`
-	Intercustomerid   string      `json:"interCustomerId"`
-	Receivablebalance string      `json:"receivableBalance"`
-	Planinfos         []Planinfos `json:"planInfos"`
-}
-
-type EnterpoolDataProviderusedinfos struct {
-	Datetimepoint     string              `json:"dateTimePoint"`
-	Ccy               string              `json:"ccy"`
-	Customerid        string              `json:"customerId"`
-	Intercustomerid   string              `json:"interCustomerId"`
-	Receivablebalance string              `json:"receivableBalance"`
-	Providerusedinfos []Providerusedinfos `json:"ProviderUsedInfos"`
-}
-
-type Planinfos struct {
-	Tradeyearmonth string `json:"TradeYearMonth"`
-	Planamount     string `json:"PlanAmount"`
-	Currency       string `json:"Currency"`
-}
-type Providerusedinfos struct {
-	Tradeyearmonth string `json:"TradeYearMonth"`
-	Usedamount     string `json:"UsedAmount"`
-	Currency       string `json:"Currency"`
-}
-
-//提交融资意向接口
-type FinancingIntention struct {
-	Custcdlinkposition string `json:"CustcdLinkPosition"`
-	Custcdlinkname     string `json:"CustcdLinkName"`
-	Certificateid      string `json:"CertificateId"`
-	Corpname           string `json:"CorpName"`
-	Remark             string `json:"Remark"`
-	Bankcontact        string `json:"BankContact"`
-	Banklinkname       string `json:"BankLinkName"`
-	Custcdcontact      string `json:"CustcdContact"`
-	Customerid         string `json:"CustomerId"`
-	Financeid          string `json:"FinanceId"`
-	Cooperationyears   string `json:"CooperationYears"`
-	Certificatetype    string `json:"CertificateType"`
-	Intercustomerid    string `json:"InterCustomerId"`
-}
-
-//推送回款账户接口
-type CollectionAccount struct {
-	Backaccount     string `json:"BackAccount"`
-	Certificateid   string `json:"CertificateId"`
-	Customerid      string `json:"CustomerId"`
-	Corpname        string `json:"CorpName"`
-	Lockremark      string `json:"LockRemark"`
-	Certificatetype string `json:"CertificateType"`
-	Intercustomerid string `json:"InterCustomerId"`
-}
 
 func sliceinfohandler(str string) (string, string) {
 	flag := 0
@@ -196,32 +39,66 @@ func sliceinfohandler(str string) (string, string) {
 	return header, infos
 }
 
-func handleInvoiceInformation(data []string) []InvoiceInformation {
+// func handleInvoiceInfo(data []string) []types.InvoiceInformation {
+// 	//如果其他输入中存在[]怎么办？
+// 	//最后返回的结果，目前是结构体的切片
+// 	var INV []types.InvoiceInformation
+// 	for i := 0; i < len(data); i++ {
+// 		str := data[i]
+// 		//fmt.Println(str)
+// 		str_split := strings.Split(str, ",")
+
+// 		ICfo := types.InvoiceInformation{
+// 			Certificateid:   str_split[0],
+// 			Customerid:      str_split[1],
+// 			Corpname:        str_split[2],
+// 			Certificatetype: str_split[3],
+// 			Intercustomerid: str_split[4],
+// 			Invoicenotaxamt: str_split[5],
+// 			Invoiceccy:      str_split[6],
+// 			Sellername:      str_split[7],
+// 			Invoicetype:     str_split[8],
+// 			Buyername:       str_split[9],
+// 			Buyerusccode:    str_split[10],
+// 			Invoicedate:     str_split[11],
+// 			Sellerusccode:   str_split[12],
+// 			Invoicecode:     str_split[13],
+// 			Invoicenum:      str_split[14],
+// 			Checkcode:       str_split[15],
+// 			Invoiceamt:      str_split[16],
+// 		}
+// 		INV = append(INV, ICfo)
+// 	}
+// 	// fmt.Println(INV)
+// 	return INV
+// }
+
+func handleInvoiceInformation(data []string) []types.InvoiceInformation {
 	//如果其他输入中存在[]怎么办？
 	//最后返回的结果，目前是结构体的切片
-	var INV []InvoiceInformation
+	var INV []types.InvoiceInformation
 	for i := 0; i < len(data); i++ {
 		str := data[i]
 		//fmt.Println(str)
 		str_split := strings.Split(str, ",")
-		ICfo := InvoiceInformation{
-			str_split[0],
-			str_split[1],
-			str_split[2],
-			str_split[3],
-			str_split[4],
-			str_split[5],
-			str_split[6],
-			str_split[7],
-			str_split[8],
-			str_split[9],
-			str_split[10],
-			str_split[11],
-			str_split[12],
-			str_split[13],
-			str_split[14],
-			str_split[15],
-			str_split[16],
+		ICfo := types.InvoiceInformation{
+			Certificateid:   str_split[0],
+			Customerid:      str_split[1],
+			Corpname:        str_split[2],
+			Certificatetype: str_split[3],
+			Intercustomerid: str_split[4],
+			Invoicenotaxamt: str_split[5],
+			Invoiceccy:      str_split[6],
+			Sellername:      str_split[7],
+			Invoicetype:     str_split[8],
+			Buyername:       str_split[9],
+			Buyerusccode:    str_split[10],
+			Invoicedate:     str_split[11],
+			Sellerusccode:   str_split[12],
+			Invoicecode:     str_split[13],
+			Invoicenum:      str_split[14],
+			Checkcode:       str_split[15],
+			Invoiceamt:      str_split[16],
 		}
 		INV = append(INV, ICfo)
 	}
@@ -229,34 +106,34 @@ func handleInvoiceInformation(data []string) []InvoiceInformation {
 	return INV
 }
 
-func handleHistoricaltransactionUsedinfos(data []string) []TransactionHistoryUsedinfos {
-	var HUI []TransactionHistoryUsedinfos
+func handleHistoricaltransactionUsedinfos(data []string) []types.TransactionHistoryUsedinfos {
+	var HUI []types.TransactionHistoryUsedinfos
 	for i := 0; i < len(data); i++ {
 		str := data[i]
 		header, usedinfos := sliceinfohandler(str)
 		header_split := strings.Split(header, ",")
-		var UsedInfos []Usedinfos
+		var UsedInfos []types.Usedinfos
 		usedinfos_split := strings.Split(usedinfos, "|")
 		if usedinfos_split[0] != "" {
 			for i := 0; i < len(usedinfos_split); i++ {
 				us := strings.Split(usedinfos_split[i], ",")
-				UIfo := Usedinfos{
-					us[0],
-					us[1],
-					us[2],
+				UIfo := types.Usedinfos{
+					Tradeyearmonth: us[0],
+					Usedamount:     us[1],
+					Ccy:            us[2],
 				}
 				UsedInfos = append(UsedInfos, UIfo)
 			}
 		}
-		trui := TransactionHistoryUsedinfos{
-			header_split[0],
-			header_split[1],
-			header_split[2],
-			header_split[3],
-			header_split[4],
-			header_split[5],
-			header_split[6],
-			UsedInfos,
+		trui := types.TransactionHistoryUsedinfos{
+			Customergrade:   header_split[0],
+			Certificatetype: header_split[1],
+			Intercustomerid: header_split[2],
+			Corpname:        header_split[3],
+			Financeid:       header_split[4],
+			Certificateid:   header_split[5],
+			Customerid:      header_split[6],
+			Usedinfos:       UsedInfos,
 		}
 		// fmt.Println(trsh)
 		HUI = append(HUI, trui)
@@ -265,34 +142,34 @@ func handleHistoricaltransactionUsedinfos(data []string) []TransactionHistoryUse
 	return HUI
 }
 
-func handleHistoricaltransactionSettleinfos(data []string) []TransactionHistorySettleinfos {
-	var HSI []TransactionHistorySettleinfos
+func handleHistoricaltransactionSettleinfos(data []string) []types.TransactionHistorySettleinfos {
+	var HSI []types.TransactionHistorySettleinfos
 	for i := 0; i < len(data); i++ {
 		str := data[i]
 		header, settleinfos := sliceinfohandler(str)
 		header_split := strings.Split(header, ",")
-		var SettleInfos []Settleinfos
+		var SettleInfos []types.Settleinfos
 		settleinfos_split := strings.Split(settleinfos, "|")
 		if settleinfos_split[0] != "" {
 			for i := 0; i < len(settleinfos_split); i++ {
 				st := strings.Split(settleinfos_split[i], ",")
-				SIfo := Settleinfos{
-					st[0],
-					st[1],
-					st[2],
+				SIfo := types.Settleinfos{
+					Tradeyearmonth: st[0],
+					Settleamount:   st[1],
+					Ccy:            st[2],
 				}
 				SettleInfos = append(SettleInfos, SIfo)
 			}
 		}
-		trsi := TransactionHistorySettleinfos{
-			header_split[0],
-			header_split[1],
-			header_split[2],
-			header_split[3],
-			header_split[4],
-			header_split[5],
-			header_split[6],
-			SettleInfos,
+		trsi := types.TransactionHistorySettleinfos{
+			Customergrade:   header_split[0],
+			Certificatetype: header_split[1],
+			Intercustomerid: header_split[2],
+			Corpname:        header_split[3],
+			Financeid:       header_split[4],
+			Certificateid:   header_split[5],
+			Customerid:      header_split[6],
+			Settleinfos:     SettleInfos,
 		}
 		HSI = append(HSI, trsi)
 	}
@@ -300,34 +177,34 @@ func handleHistoricaltransactionSettleinfos(data []string) []TransactionHistoryS
 	return HSI
 }
 
-func handleHistoricaltransactionOrderinfos(data []string) []TransactionHistoryOrderinfos {
-	var HOI []TransactionHistoryOrderinfos
+func handleHistoricaltransactionOrderinfos(data []string) []types.TransactionHistoryOrderinfos {
+	var HOI []types.TransactionHistoryOrderinfos
 	for i := 0; i < len(data); i++ {
 		str := data[i]
 		header, orderinfos := sliceinfohandler(str)
 		header_split := strings.Split(header, ",")
-		var OrderInfos []Orderinfos
+		var OrderInfos []types.Orderinfos
 		orderinfos_split := strings.Split(orderinfos, "|")
 		if orderinfos_split[0] != "" {
 			for i := 0; i < len(orderinfos_split); i++ {
 				od := strings.Split(orderinfos_split[i], ",")
-				OIfo := Orderinfos{
-					od[0],
-					od[1],
-					od[2],
+				OIfo := types.Orderinfos{
+					Tradeyearmonth: od[0],
+					Orderamount:    od[1],
+					Ccy:            od[2],
 				}
 				OrderInfos = append(OrderInfos, OIfo)
 			}
 		}
-		troi := TransactionHistoryOrderinfos{
-			header_split[0],
-			header_split[1],
-			header_split[2],
-			header_split[3],
-			header_split[4],
-			header_split[5],
-			header_split[6],
-			OrderInfos,
+		troi := types.TransactionHistoryOrderinfos{
+			Customergrade:   header_split[0],
+			Certificatetype: header_split[1],
+			Intercustomerid: header_split[2],
+			Corpname:        header_split[3],
+			Financeid:       header_split[4],
+			Certificateid:   header_split[5],
+			Customerid:      header_split[6],
+			Orderinfos:      OrderInfos,
 		}
 		HOI = append(HOI, troi)
 	}
@@ -335,34 +212,34 @@ func handleHistoricaltransactionOrderinfos(data []string) []TransactionHistoryOr
 	return HOI
 }
 
-func handleHistoricaltransactionReceivableinfos(data []string) []TransactionHistoryReceivableinfos {
-	var HRI []TransactionHistoryReceivableinfos
+func handleHistoricaltransactionReceivableinfos(data []string) []types.TransactionHistoryReceivableinfos {
+	var HRI []types.TransactionHistoryReceivableinfos
 	for i := 0; i < len(data); i++ {
 		str := data[i]
 		header, receivableinfos := sliceinfohandler(str)
 		header_split := strings.Split(header, ",")
-		var ReceivableInfos []Receivableinfos
+		var ReceivableInfos []types.Receivableinfos
 		receivableinfos_split := strings.Split(receivableinfos, "|")
 		if receivableinfos_split[0] != "" {
 			for i := 0; i < len(receivableinfos_split); i++ {
 				rc := strings.Split(receivableinfos_split[i], ",")
-				RIfo := Receivableinfos{
-					rc[0],
-					rc[1],
-					rc[2],
+				RIfo := types.Receivableinfos{
+					Tradeyearmonth:   rc[0],
+					Receivableamount: rc[1],
+					Ccy:              rc[2],
 				}
 				ReceivableInfos = append(ReceivableInfos, RIfo)
 			}
 		}
-		trri := TransactionHistoryReceivableinfos{
-			header_split[0],
-			header_split[1],
-			header_split[2],
-			header_split[3],
-			header_split[4],
-			header_split[5],
-			header_split[6],
-			ReceivableInfos,
+		trri := types.TransactionHistoryReceivableinfos{
+			Customergrade:   header_split[0],
+			Certificatetype: header_split[1],
+			Intercustomerid: header_split[2],
+			Corpname:        header_split[3],
+			Financeid:       header_split[4],
+			Certificateid:   header_split[5],
+			Customerid:      header_split[6],
+			Receivableinfos: ReceivableInfos,
 		}
 		HRI = append(HRI, trri)
 	}
@@ -370,37 +247,37 @@ func handleHistoricaltransactionReceivableinfos(data []string) []TransactionHist
 	return HRI
 }
 
-func handleEnterpoolDataPlaninfos(data []string) []EnterpoolDataPlaninfos {
+func handleEnterpoolDataPlaninfos(data []string) []types.EnterpoolDataPlaninfos {
 	//如果其他输入中存在[]怎么办？
 	//最后返回的结果，目前是结构体的切片
-	var EPD []EnterpoolDataPlaninfos
+	var EPD []types.EnterpoolDataPlaninfos
 	for i := 0; i < len(data); i++ {
 		str := data[i]
 
 		header, planinfos := sliceinfohandler(str)
 
 		header_split := strings.Split(header, ",")
-		var PlanInfos []Planinfos
+		var PlanInfos []types.Planinfos
 		planinfos_split := strings.Split(planinfos, "|")
 		if planinfos_split[0] != "" {
 			for i := 0; i < len(planinfos_split); i++ {
 				pl := strings.Split(planinfos_split[i], ",")
-				PLfo := Planinfos{
-					pl[0],
-					pl[1],
-					pl[2],
+				PLfo := types.Planinfos{
+					Tradeyearmonth: pl[0],
+					Planamount:     pl[1],
+					Currency:       pl[2],
 				}
 				PlanInfos = append(PlanInfos, PLfo)
 			}
 		}
 
-		epdt := EnterpoolDataPlaninfos{
-			header_split[0],
-			header_split[1],
-			header_split[2],
-			header_split[3],
-			header_split[4],
-			PlanInfos,
+		epdt := types.EnterpoolDataPlaninfos{
+			Datetimepoint:     header_split[0],
+			Ccy:               header_split[1],
+			Customerid:        header_split[2],
+			Intercustomerid:   header_split[3],
+			Receivablebalance: header_split[4],
+			Planinfos:         PlanInfos,
 		}
 		EPD = append(EPD, epdt)
 	}
@@ -408,33 +285,33 @@ func handleEnterpoolDataPlaninfos(data []string) []EnterpoolDataPlaninfos {
 	return EPD
 }
 
-func handleEnterpoolDataProviderusedinfos(data []string) []EnterpoolDataProviderusedinfos {
-	var EPD []EnterpoolDataProviderusedinfos
+func handleEnterpoolDataProviderusedinfos(data []string) []types.EnterpoolDataProviderusedinfos {
+	var EPD []types.EnterpoolDataProviderusedinfos
 	for i := 0; i < len(data); i++ {
 		str := data[i]
 		header, providerusedinfos := sliceinfohandler(str)
 		header_split := strings.Split(header, ",")
-		var ProviderusedInfos []Providerusedinfos
+		var ProviderusedInfos []types.Providerusedinfos
 		providerusedinfos_split := strings.Split(providerusedinfos, "|")
 		if providerusedinfos_split[0] != "" {
 			for i := 0; i < len(providerusedinfos_split); i++ {
 				pr := strings.Split(providerusedinfos_split[i], ",")
-				PRfo := Providerusedinfos{
-					pr[0],
-					pr[1],
-					pr[2],
+				PRfo := types.Providerusedinfos{
+					Tradeyearmonth: pr[0],
+					Usedamount:     pr[1],
+					Currency:       pr[2],
 				}
 				ProviderusedInfos = append(ProviderusedInfos, PRfo)
 			}
 		}
 
-		epdt := EnterpoolDataProviderusedinfos{
-			header_split[0],
-			header_split[1],
-			header_split[2],
-			header_split[3],
-			header_split[4],
-			ProviderusedInfos,
+		epdt := types.EnterpoolDataProviderusedinfos{
+			Datetimepoint:     header_split[0],
+			Ccy:               header_split[1],
+			Customerid:        header_split[2],
+			Intercustomerid:   header_split[3],
+			Receivablebalance: header_split[4],
+			Providerusedinfos: ProviderusedInfos,
 		}
 		EPD = append(EPD, epdt)
 	}
@@ -442,8 +319,8 @@ func handleEnterpoolDataProviderusedinfos(data []string) []EnterpoolDataProvider
 	return EPD
 }
 
-func handleFinancingIntention(data []string) []FinancingIntention {
-	var FCI []FinancingIntention
+func handleFinancingIntention(data []string) []types.FinancingIntention {
+	var FCI []types.FinancingIntention
 	for i := 0; i < len(data); i++ {
 		str := data[i]
 		//fmt.Println(str)
@@ -462,20 +339,20 @@ func handleFinancingIntention(data []string) []FinancingIntention {
 			}
 		}
 		header_split := strings.Split(header, ",")
-		fcin := FinancingIntention{
-			header_split[0],
-			header_split[1],
-			header_split[2],
-			header_split[3],
-			header_split[4],
-			header_split[5],
-			header_split[6],
-			header_split[7],
-			header_split[8],
-			header_split[9],
-			header_split[10],
-			header_split[11],
-			header_split[12],
+		fcin := types.FinancingIntention{
+			Custcdlinkposition: header_split[0],
+			Custcdlinkname:     header_split[1],
+			Certificateid:      header_split[2],
+			Corpname:           header_split[3],
+			Remark:             header_split[4],
+			Bankcontact:        header_split[5],
+			Banklinkname:       header_split[6],
+			Custcdcontact:      header_split[7],
+			Customerid:         header_split[8],
+			Financeid:          header_split[9],
+			Cooperationyears:   header_split[10],
+			Certificatetype:    header_split[11],
+			Intercustomerid:    header_split[12],
 		}
 		FCI = append(FCI, fcin)
 	}
@@ -483,8 +360,8 @@ func handleFinancingIntention(data []string) []FinancingIntention {
 	return FCI
 }
 
-func handleCollectionAccount(data []string) []CollectionAccount {
-	var COLA []CollectionAccount
+func handleCollectionAccount(data []string) []types.CollectionAccount {
+	var COLA []types.CollectionAccount
 	for i := 0; i < len(data); i++ {
 		str := data[i]
 		//fmt.Println(str)
@@ -503,14 +380,14 @@ func handleCollectionAccount(data []string) []CollectionAccount {
 			}
 		}
 		header_split := strings.Split(header, ",")
-		cola := CollectionAccount{
-			header_split[0],
-			header_split[1],
-			header_split[2],
-			header_split[3],
-			header_split[4],
-			header_split[5],
-			header_split[6],
+		cola := types.CollectionAccount{
+			Backaccount:     header_split[0],
+			Certificateid:   header_split[1],
+			Customerid:      header_split[2],
+			Corpname:        header_split[3],
+			Lockremark:      header_split[4],
+			Certificatetype: header_split[5],
+			Intercustomerid: header_split[6],
 		}
 		COLA = append(COLA, cola)
 	}
